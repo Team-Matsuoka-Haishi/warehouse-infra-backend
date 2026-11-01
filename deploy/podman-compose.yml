@@ -1,0 +1,66 @@
+version: "3.8"
+
+services:
+  db:
+    image: docker.io/library/postgres:16-alpine
+    container_name: dx-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-dxadmin}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB:-inventory_db}
+      TZ: "Asia/Tokyo"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ../src/db/init.sql:/docker-entrypoint-initdb.d/01_init.sql:ro
+    networks:
+      - dx-backend-net
+    ports:
+      - "127.0.0.1:5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-dxadmin} -d ${POSTGRES_DB:-inventory_db}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  api:
+    build:
+      context: ../src/backend
+      dockerfile: Containerfile
+    container_name: dx-fastapi
+    restart: unless-stopped
+    environment:
+      DATABASE_URL: postgresql+psycopg://${POSTGRES_USER:-dxadmin}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB:-inventory_db}
+      INTERNAL_API_TOKEN: ${INTERNAL_API_TOKEN}
+      TZ: "Asia/Tokyo"
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - dx-backend-net
+    ports:
+      - "127.0.0.1:8000:8000"
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+
+  tunnel:
+    image: docker.io/cloudflare/cloudflared:latest
+    container_name: dx-cloudflared
+    restart: unless-stopped
+    command: tunnel --no-autoupdate run --token ${TUNNEL_TOKEN}
+    depends_on:
+      api:
+        condition: service_healthy
+    networks:
+      - dx-backend-net
+
+networks:
+  dx-backend-net:
+    driver: bridge
+
+volumes:
+  pgdata:
+

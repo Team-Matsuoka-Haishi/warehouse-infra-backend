@@ -1,0 +1,78 @@
+# ==========================================
+# Git Ignore Configuration
+# 物流倉庫 設備保守・部品在庫管理DX プロジェクト
+# ==========================================
+
+# 1. 機密情報・環境変数 (絶対にコミットしない)
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.cert
+*.crt
+
+# 2. Python / FastAPI
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+.pytest_cache/
+.coverage
+htmlcov/
+.mypy_cache/
+.ruff_cache/
+
+# 仮想環境
+venv/
+.venv/
+ENV/
+env/
+
+# 3. データベース / コンテナデータ
+pgdata/
+*.sqlite3
+*.db
+
+# 4. クラウド同期ファイル / Google Drive
+*.gdoc
+*.gsheet
+*.gslides
+.tmp.drivedownload/
+
+# 5. エディタ / OS一時ファイル
+.vscode/
+.idea/
+*.swp
+*~
+Thumbs.db
+Desktop.ini
+.DS_Store
+
+# 6. Salesforce (SFDX)
+.sfdx/
+.sf/
+.localdevserver/
+
+# 7. Node.js (将来的なフロントエンド拡張用)
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
