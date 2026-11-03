@@ -50,7 +50,8 @@ pgdata/
 *.sqlite3
 *.db
 
-# 4. クラウド同期ファイル / Google Drive
+# 4. クラウド同期ファイル / Google Drive / プロジェクト管理
+00.管理/
 *.gdoc
 *.gsheet
 *.gslides

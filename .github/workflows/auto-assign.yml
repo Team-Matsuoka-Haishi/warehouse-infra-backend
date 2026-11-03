@@ -1,0 +1,36 @@
+name: Auto Assign
+on:
+  issues:
+    types: [opened]
+  pull_request:
+    types: [opened]
+
+jobs:
+  assign:
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+      pull-requests: write
+    steps:
+      - name: Assign sequentially by number
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ITEM_NUMBER: ${{ github.event.issue.number || github.event.pull_request.number }}
+          USER_A: "Matsun25"
+          USER_B: "yingjieyeshi716-hash"
+        run: |
+          # 番号の奇数・偶数で交互に担当者を判定（奇数: 自分 / 偶数: 友人）
+          if [ $((ITEM_NUMBER % 2)) -eq 1 ]; then
+            ASSIGNEE="$USER_A"
+          else
+            ASSIGNEE="$USER_B"
+          fi
+
+          echo "Assigning #${ITEM_NUMBER} to ${ASSIGNEE}"
+
+          # Issue または PR に担当者を割り当て
+          if [ -n "${{ github.event.issue.number }}" ]; then
+            gh issue edit "$ITEM_NUMBER" --add-assignee "$ASSIGNEE" --repo "$GITHUB_REPOSITORY"
+          else
+            gh pr edit "$ITEM_NUMBER" --add-assignee "$ASSIGNEE" --repo "$GITHUB_REPOSITORY"
+          fi
