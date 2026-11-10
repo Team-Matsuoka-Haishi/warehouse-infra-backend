@@ -111,3 +111,4 @@ curl -X POST "https://<API-ID>.execute-api.ap-northeast-1.amazonaws.com/v1/inven
 | `404 Not Found` | `{"detail": "Not Found"}` | FastAPI側のルーティングとLambdaの転送先パスが不一致。`podman rm -f dx-fastapi && podman-compose up -d api` で最新コードを反映させる。 |
 | `502 Bad Gateway` | `Bad Gateway (Tunnel unreachable)` | ローカルの `cloudflared` または `dx-fastapi` が停止している、あるいはQuick Tunnel再起動後にLambdaの環境変数 `TUNNEL_BASE_URL` を更新していない。 |
 | `504 Gateway Timeout` | エンドポイントタイムアウト | Lambdaのタイムアウト設定がデフォルト（3秒）のままになっている。Lambdaの一般設定でタイムアウトを `10秒` に変更する。 |
+

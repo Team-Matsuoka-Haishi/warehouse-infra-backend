@@ -1,9 +1,10 @@
 # ==========================================
 # Git Ignore Configuration
 # 物流倉庫 設備保守・部品在庫管理DX プロジェクト
+# (Publicリポジトリ公開用 セキュリティ強化設定)
 # ==========================================
 
-# 1. 機密情報・環境変数 (絶対にコミットしない)
+# 1. 機密情報・環境変数・認証情報 (絶対にコミットしない)
 .env
 .env.*
 !.env.example
@@ -11,8 +12,26 @@
 *.key
 *.cert
 *.crt
+*credentials*
+*credential*
+*.secret
+*.token
+*.csv
 
-# 2. Python / FastAPI
+# 2. 内部ドラフト資料・Microsoft Officeバイナリ・レビュー用一時ファイル
+*.docx
+*.doc
+*.xlsx
+*.xls
+*.pptx
+*.ppt
+*_v0.*
+*_draft*
+*ドラフト*
+*お客様向け*
+*検討資料*
+
+# 3. Python / FastAPI
 __pycache__/
 *.py[cod]
 *$py.class
@@ -45,19 +64,19 @@ venv/
 ENV/
 env/
 
-# 3. データベース / コンテナデータ
+# 4. データベース / コンテナデータ
 pgdata/
 *.sqlite3
 *.db
 
-# 4. クラウド同期ファイル / Google Drive / プロジェクト管理
+# 5. クラウド同期ファイル / Google Drive / プロジェクト管理
 00.管理/
 *.gdoc
 *.gsheet
 *.gslides
 .tmp.drivedownload/
 
-# 5. エディタ / OS一時ファイル
+# 6. エディタ / OS一時ファイル
 .vscode/
 .idea/
 *.swp
@@ -65,13 +84,14 @@ pgdata/
 Thumbs.db
 Desktop.ini
 .DS_Store
+*.tmp
 
-# 6. Salesforce (SFDX)
+# 7. Salesforce (SFDX)
 .sfdx/
 .sf/
 .localdevserver/
 
-# 7. Node.js (将来的なフロントエンド拡張用)
+# 8. Node.js (将来的なフロントエンド拡張用)
 node_modules/
 npm-debug.log*
 yarn-debug.log*
